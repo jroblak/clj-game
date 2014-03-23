@@ -5,11 +5,11 @@
 (def ^:const pixels-per-tile 16)
 (def ^:const duration 0.15)
 (def ^:const damping 0.5)
-(def ^:const max-velocity 2)
-(def ^:const jump-velocity 12)
+(def ^:const max-velocity 8)
+(def ^:const jump-velocity 8)
 (def ^:const max-jump-velocity (* jump-velocity 4))
 (def ^:const deceleration 0.9)
-(def ^:const y-deceleration 0.5)
+(def ^:const y-deceleration 0.01)
 (def ^:const gravity -2.5)
 
 (defn decelerate
@@ -21,7 +21,7 @@
 
 (defn y-decelerate
   [velocity]
-  (let [velocity (* velocity deceleration)]
+  (let [velocity (- velocity y-deceleration)]
     (if (< (Math/abs velocity) damping)
       0
       velocity)))

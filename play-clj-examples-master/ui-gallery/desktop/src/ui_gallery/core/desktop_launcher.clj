@@ -8,3 +8,5 @@
   []
   (LwjglApplication. ui-gallery "ui-gallery" 800 600 true)
   (Keyboard/enableRepeatEvents true))
+
+(-main)

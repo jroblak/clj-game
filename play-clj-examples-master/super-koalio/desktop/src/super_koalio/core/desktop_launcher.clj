@@ -8,3 +8,4 @@
   []
   (LwjglApplication. super-koalio "super-koalio" 800 600 true)
   (Keyboard/enableRepeatEvents true))
+(-main)

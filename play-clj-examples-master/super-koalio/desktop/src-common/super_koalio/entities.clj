@@ -35,7 +35,7 @@
     (if (or (not= 0 x-change) (not= 0 y-change))
       (assoc entity
              :x-velocity (u/decelerate x-velocity)
-             :y-velocity (u/decelerate y-velocity)
+             :y-velocity (u/y-decelerate y-velocity)
              :x-change x-change
              :y-change y-change
              :x (+ x x-change)

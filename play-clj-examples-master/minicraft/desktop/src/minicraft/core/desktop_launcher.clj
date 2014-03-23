@@ -8,3 +8,5 @@
   []
   (LwjglApplication. minicraft "minicraft" 800 600 true)
   (Keyboard/enableRepeatEvents true))
+
+(-main)

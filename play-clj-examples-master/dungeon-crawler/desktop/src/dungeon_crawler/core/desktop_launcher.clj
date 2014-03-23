@@ -8,3 +8,5 @@
   []
   (LwjglApplication. dungeon-crawler "dungeon-crawler" 800 600 true)
   (Keyboard/enableRepeatEvents true))
+
+(-main)

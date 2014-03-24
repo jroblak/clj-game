@@ -1,0 +1,71 @@
+(set! *warn-on-reflection* true)
+
+(ns clj-game.core
+  (:require [play-clj.core :refer :all]
+            [play-clj.g2d :refer :all]
+            [play-clj.ui :refer :all]
+            [clj-game.entities :as e]
+            [clj-game.utils :as u]))
+
+(declare clj-game main-screen text-screen)
+
+(defn update-screen!
+  [screen entities]
+  (doseq [{:keys [x y height is-me? to-destroy]} entities]
+    (when is-me?
+      (x! screen x)
+      (when (< y (- height))
+        (set-screen! clj-game main-screen text-screen)))
+    (when-let [[tile-x tile-y] to-destroy]
+      (tiled-map-layer! (tiled-map-layer screen "walls")
+                        :set-cell tile-x tile-y nil)))
+  (map #(dissoc % :to-destroy) entities))
+
+(defscreen main-screen
+  :on-show
+  (fn [screen entities]
+    (->> (orthogonal-tiled-map "level1.tmx" (/ 1 u/pixels-per-tile))
+         (update! screen :camera (orthographic) :renderer))
+    (let [sheet (texture "koalio.png")
+          tiles (texture! sheet :split 18 26)
+          player-images (for [col [0 1 2 3 4]]
+                          (texture (aget tiles 0 col)))]
+      (apply e/create player-images)))
+
+  :on-render
+  (fn [screen entities]
+    (clear! 0.5 0.5 1 1)
+    (->> entities
+         (map #(->> %
+                    (e/move screen)
+                    (e/prevent-move screen)
+                    (e/animate screen)))
+         (render! screen)
+         (update-screen! screen)))
+
+  :on-resize
+  (fn [screen entities]
+    (height! screen u/vertical-tiles)))
+
+(defscreen text-screen
+  :on-show
+  (fn [screen entities]
+    (update! screen :camera (orthographic) :renderer (stage))
+    (assoc (label "0" (color :white))
+           :id :fps
+           :x 5))
+  :on-render
+  (fn [screen entities]
+    (->> (for [entity entities]
+           (case (:id entity)
+             :fps (doto entity (label! :set-text (str (game :fps))))
+             entity))
+         (render! screen)))
+  :on-resize
+  (fn [screen entities]
+    (height! screen 300)))
+
+(defgame clj-game
+  :on-create
+  (fn [this]
+    (set-screen! this main-screen text-screen)))

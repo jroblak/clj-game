@@ -26,8 +26,8 @@
   (fn [screen entities]
     (->> (orthogonal-tiled-map "level1.tmx" (/ 1 u/pixels-per-tile))
          (update! screen :camera (orthographic) :renderer))
-    (let [sheet (texture "koalio.png")
-          tiles (texture! sheet :split 18 26)
+    (let [sheet (texture "player.png")
+          tiles (texture! sheet :split 32 32)
           player-images (for [col [0 1 2 3 4]]
                           (texture (aget tiles 0 col)))]
       (apply e/create player-images)))

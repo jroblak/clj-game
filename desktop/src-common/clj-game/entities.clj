@@ -1,7 +1,7 @@
-(ns super-koalio.entities
+(ns clj-game.entities
   (:require [play-clj.core :refer :all]
             [play-clj.g2d :refer :all]
-            [super-koalio.utils :as u]))
+            [clj-game.utils :as u]))
 
 (defn create
   [stand jump & walk]

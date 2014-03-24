@@ -1,11 +1,11 @@
-(ns super-koalio.core.desktop-launcher
-  (:require [super-koalio.core :refer :all])
+(ns clj-game.core.desktop-launcher
+  (:require [clj-game.core :refer :all])
   (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
 (defn -main
   []
-  (LwjglApplication. super-koalio "super-koalio" 800 600 true)
+  (LwjglApplication. clj-game "clj-game" 800 600 true)
   (Keyboard/enableRepeatEvents true))
 (-main)

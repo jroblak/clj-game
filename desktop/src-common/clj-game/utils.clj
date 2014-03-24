@@ -1,4 +1,4 @@
-(ns super-koalio.utils
+(ns clj-game.utils
   (:require [play-clj.core :refer :all]))
 
 (def ^:const vertical-tiles 20)

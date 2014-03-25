@@ -3,7 +3,9 @@
             [play-clj.g2d :refer :all]
             [clj-game.utils :as u]))
 
-(defn create
+; https://github.com/oakes/play-clj-examples/blob/master/minicraft/desktop/src-common/minicraft/entities.clj
+; player entity creation code
+(defn create-player
   [stand jump & walk]
   (assoc stand
          :stand-right stand
@@ -24,6 +26,7 @@
          :y 10
          :is-me? true
          :can-jump? false
+         :can-attack? true
          :direction :right))
 
 (defn move
@@ -43,6 +46,24 @@
              :can-jump? (if (> y-velocity 0) false can-jump?))
       entity)))
 
+(defn create-attack
+  [screen entities entity]
+  (let [sheet (texture "sprites.png")
+        tiles (texture! sheet :split 32 32)
+        player-images (for [col [0 1 2 3 4]]
+                        (texture (aget tiles 0 col)))]
+      (conj entities (apply create-player player-images))))
+
+(defn attack
+  [screen entities {:keys [x y can-attack? is-me?] :as entity}]
+  (if (and is-me? (is-pressed? :control-left) can-attack?)
+      (do
+          (add-timer! screen :player-attack-cooldown 10)
+          (create-attack screen entities entity)
+          (assoc entity :can-attack false))
+      entity))
+
+; animation code
 (defn animate
   [screen {:keys [x-velocity y-velocity
                   stand-right stand-left
@@ -61,6 +82,7 @@
              (if (= direction :right) stand-right stand-left))
            {:direction direction})))
 
+; collision code
 (defn prevent-move
   [screen {:keys [x y x-change y-change] :as entity}]
   (let [old-x (- x x-change)
@@ -72,5 +94,8 @@
            (when (u/get-touching-tile screen entity-x "walls")
              {:x-velocity 0 :x-change 0 :x old-x})
            (when-let [tile (u/get-touching-tile screen entity-y "walls")]
+             {:y-velocity 0 :y-change 0 :y old-y
+              :can-jump? (not up?)})
+           (when-let [tile (u/get-touching-tile screen entity-y "breakable")]
              {:y-velocity 0 :y-change 0 :y old-y
               :can-jump? (not up?) :to-destroy (when up? tile)}))))

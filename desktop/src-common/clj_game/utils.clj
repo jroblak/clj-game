@@ -1,17 +1,19 @@
 (ns clj-game.utils
   (:require [play-clj.core :refer :all]))
 
+; constants
 (def ^:const vertical-tiles 20)
 (def ^:const pixels-per-tile 16)
 (def ^:const duration 0.15)
-(def ^:const damping 0.5)
+(def ^:const damping 1.0)
 (def ^:const max-velocity 8)
 (def ^:const jump-velocity 8)
 (def ^:const max-jump-velocity (* jump-velocity 4))
 (def ^:const deceleration 0.9)
 (def ^:const y-deceleration 0.01)
-(def ^:const gravity -2.5)
+(def ^:const gravity -2.0)
 
+; deceleration for x-velocity
 (defn decelerate
   [velocity]
   (let [velocity (* velocity deceleration)]
@@ -19,6 +21,7 @@
       0
       velocity)))
 
+; deceleration for y-velocity
 (defn y-decelerate
   [velocity]
   (let [velocity (- velocity y-deceleration)]
@@ -36,6 +39,7 @@
          :right (> (game :x) (* (game :width) (/ 2 3)))
          false)))
 
+; get x-velocity from keypresses
 (defn get-x-velocity
   [{:keys [is-me? x-velocity]}]
   (if is-me?
@@ -48,6 +52,7 @@
       x-velocity)
     x-velocity))
 
+; get y-velocity from keypresses (jumping)
 (defn get-y-velocity
   [{:keys [is-me? y-velocity can-jump?]}]
   (if is-me?
@@ -58,6 +63,8 @@
       y-velocity)
     y-velocity))
 
+
+; flip sprite based on left / right
 (defn get-direction
   [{:keys [x-velocity direction]}]
   (cond

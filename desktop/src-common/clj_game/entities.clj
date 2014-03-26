@@ -55,6 +55,11 @@
   (assoc (create stand jump walk)
          :is-me? true))
 
+(defn create-baddy
+  [stand jump & walk]
+  (assoc (create stand jump walk)
+         :is-enemy? true))
+
 (defn create-attack
   [screen entities entity]
     (assoc (create entity)

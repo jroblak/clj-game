@@ -10,10 +10,11 @@
 ; declare our 'screens' / 'levels'
 (declare clj-game main-screen text-screen title-screen)
 
-;custom update code for the game
+; custom update code for the game
+; handles removing and resetting entities
 (defn update-screen!
   [screen entities]
-  (doseq [{:keys [x y height is-me? to-destroy]} entities]
+  (doseq [{:keys [x y height is-me? is-attack? to-destroy] :as entity} entities]
     (when is-me?
       (x! screen x)
       (when (< y (- height)) ; when the players y is less than the maps height, reset
@@ -63,13 +64,13 @@
       (apply e/create-player player-images)))
   :on-render
   (fn [screen entities]
-    (clear! 0.5 0.5 1 1)
+    (clear! 0.5 0.5 1 1) ; RGBA background color
     (->> entities
          (map #(->> %
                     (e/move screen)
-                    (e/attack screen entities)
                     (e/prevent-move screen)
                     (e/animate screen)))
+         (e/handle-attacks screen)
          (render! screen)
          (update-screen! screen)))
   :on-resize
@@ -82,10 +83,10 @@
   :on-timer
   (fn [screen entities]
     (case (:id screen)
-      :player-attack-cooldown (doseq [{:keys [is-me? can-attack?] :as entity} entities]
-                                (when is-me?
+      :player-attack-cooldown (for [entity entities]
+                                (if (get entity :is-me?)
                                   (assoc entity :can-attack? true)
-                                  (remove-timer! screen :player-attack-cooldown)))
+                                  entity))
       nil)))
 
 ; FPS RENDERER

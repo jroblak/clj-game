@@ -63,7 +63,6 @@
       y-velocity)
     y-velocity))
 
-
 ; flip sprite based on left / right
 (defn get-direction
   [{:keys [x-velocity direction]}]

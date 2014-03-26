@@ -102,7 +102,7 @@
           (add-timer! screen :player-attack-cooldown 1)
           [(create-attack screen entities entity)
            (assoc entity :can-attack? false)])
-        (if (and is-attack? (= x-change 0) (= y-change 0))
+        (if (and is-attack? (= x-change 0))
           []
           entity)))))
 

@@ -20,8 +20,8 @@
 ; handles removing and resetting entities
 (defn update-screen!
   [screen entities]
-  (doseq [{:keys [x y height is-me? is-attack? to-destroy] :as entity} entities]
-    (when is-me?
+  (doseq [{:keys [x y height me? attack? to-destroy] :as entity} entities]
+    (when me?
       (x! screen x)
       (when (< y (- height)) ; when the players y is less than the maps height, reset
         (set-screen! clj-game title-screen)))
@@ -90,7 +90,7 @@
   (fn [screen entities]
     (case (:id screen)
       :player-attack-cooldown (for [entity entities]
-                                (if (get entity :is-me?)
+                                (if (get entity :me?)
                                   (assoc entity :can-attack? true)
                                   entity))
       nil)))

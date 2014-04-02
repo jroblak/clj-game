@@ -53,7 +53,7 @@
 (defn create-player
   [stand jump & walk]
   (assoc (create stand jump walk)
-         :is-me? true))
+         :me? true))
 
 (defn create-baddy
   [stand jump & walk]
@@ -63,16 +63,16 @@
 (defn create-attack
   [screen entities entity]
     (assoc (create entity)
-      :is-attack? true))
+      :attack? true))
 
 (defn move
-  [{:keys [delta-time]} {:keys [x y can-jump? is-attack?] :as entity}]
+  [{:keys [delta-time]} {:keys [x y can-jump? attack?] :as entity}]
   (let [x-velocity (u/get-x-velocity entity)
         y-velocity (+ (u/get-y-velocity entity) u/gravity)
         x-change (* x-velocity delta-time)
         y-change (* y-velocity delta-time)]
     (cond
-     (= is-attack? true) ; attacks should always move
+     (= attack? true) ; attacks should always move
        (assoc entity
         :x-velocity x-velocity
         :y-velocity (u/get-y-velocity entity)
@@ -96,13 +96,13 @@
 (defn handle-attacks
   [screen entities]
   (flatten
-    (for [{:keys [x y x-change y-change can-attack? is-me? is-attack?] :as entity} entities]
-      (if (and is-me? (is-pressed? :control-left) can-attack?)
+    (for [{:keys [x y x-change y-change can-attack? me? attack?] :as entity} entities]
+      (if (and me? (is-pressed? :control-left) can-attack?)
         (do
           (add-timer! screen :player-attack-cooldown 1)
           [(create-attack screen entities entity)
            (assoc entity :can-attack? false)])
-        (if (and is-attack? (= x-change 0))
+        (if (and attack? (= x-change 0))
           []
           entity)))))
 
@@ -112,11 +112,11 @@
                   stand-right stand-left
                   jump-right jump-left
                   walk-right walk-left
-                  is-attack?] :as entity}]
+                  attack?] :as entity}]
   (let [direction (u/get-direction entity)]
     (merge entity
            (cond
-             (= is-attack? true)
+             (= attack? true)
              (if (= direction :right)
                (animation->texture screen walk-right)
                (animation->texture screen walk-left))

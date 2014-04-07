@@ -56,7 +56,7 @@
          :me? true))
 
 (defn create-baddy
-  [stand jump & walk]
+  [stand jump walk tiled-object]
   (assoc (create stand jump walk)
          :is-enemy? true))
 
@@ -105,6 +105,10 @@
         (if (and attack? (= x-change 0))
           []
           entity)))))
+
+(defn handle-ai
+  [entities]
+  entities)
 
 ; animation code
 (defn animate

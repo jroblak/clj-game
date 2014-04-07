@@ -1,5 +1,6 @@
 ; TODO:
 ; 1. bad guy(s)
+;    - iterate through tilemap and search for objects in layers
 ; 2. transitioning to new level(s)
 ;    - factor out level 1 code to separate functions that are called
 ;      by the level functions ?
@@ -61,17 +62,24 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (->> (orthogonal-tiled-map "level1.tmx" (/ 1 u/pixels-per-tile))
-         (update! screen :camera (orthographic) :renderer))
-    (let [sheet (texture "player.png")
+    (let [screen (->> (/ 1 u/pixels-per-tile)
+                      (orthogonal-tiled-map "level1.tmx")
+                      (update! screen :camera (orthographic) :renderer))
+          sheet (texture "player.png")
           tiles (texture! sheet :split 32 32)
           player-images (for [col [0 1 2 3 4]]
                           (texture (aget tiles 0 col)))]
-      (apply e/create-player player-images)))
+      (flatten (pvalues
+                (apply e/create-player player-images)
+                ;(for [tile-object (tiled-map-layer! (tiled-map-layer screen "entities")
+                ;                             :get-objects)]
+                ;  (e/create-baddy player-images tile-object))
+                ))))
   :on-render
   (fn [screen entities]
     (clear! 0.5 0.5 1 1) ; RGBA background color
     (->> entities
+         (e/handle-ai)
          (map #(->> %
                     (e/move screen)
                     (e/prevent-move screen)

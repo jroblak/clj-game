@@ -71,9 +71,10 @@
                           (texture (aget tiles 0 col)))]
       (flatten (pvalues
                 (apply e/create-player player-images)
+                ; OBJECT LAYERS NOT YET IN PLAY-CLJ
                 ;(for [tile-object (tiled-map-layer! (tiled-map-layer screen "entities")
                 ;                             :get-objects)]
-                ;  (e/create-baddy player-images tile-object))
+                ;  (apply e/create-baddy (conj player-images tile-object)))
                 ))))
   :on-render
   (fn [screen entities]

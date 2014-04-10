@@ -6,5 +6,5 @@
 
 (defn -main
   []
-  (LwjglApplication. clj-game "clj-game" 800 600 true)
+  (LwjglApplication. clj-game "clj-game" 800 600)
   (Keyboard/enableRepeatEvents true))

@@ -56,9 +56,13 @@
          :me? true))
 
 (defn create-baddy
-  [stand jump walk tiled-object]
+  ;[stand jump walk object]
+  [stand jump & walk]
   (assoc (create stand jump walk)
-         :is-enemy? true))
+         :is-enemy? true
+         ;:x (.x object)
+         ;:y (.y object)))
+    ))
 
 (defn create-attack
   [screen entities entity]
@@ -97,7 +101,7 @@
   [screen entities]
   (flatten
     (for [{:keys [x y x-change y-change can-attack? me? attack?] :as entity} entities]
-      (if (and me? (is-pressed? :control-left) can-attack?)
+      (if (and me? (key-pressed? :control-left) can-attack?)
         (do
           (add-timer! screen :player-attack-cooldown 1)
           [(create-attack screen entities entity)

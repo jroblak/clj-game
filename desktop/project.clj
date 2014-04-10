@@ -1,12 +1,12 @@
-(defproject clj-game "0.0.1-SNAPSHOT"
-  :description "FIXME: a game"
+(defproject clj-game "0.1.0-SNAPSHOT"
+  :description "a game"
 
-  :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
-                 [com.badlogicgames.gdx/gdx-platform "0.9.9"
+  :dependencies [[com.badlogicgames.gdx/gdx "1.0-SNAPSHOT"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0-SNAPSHOT"]
+                 [com.badlogicgames.gdx/gdx-platform "1.0-SNAPSHOT"
                   :classifier "natives-desktop"]
                  [org.clojure/clojure "1.5.1"]
-                 [play-clj "LATEST"]]
+                 [play-clj "0.3.0-SNAPSHOT"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
 

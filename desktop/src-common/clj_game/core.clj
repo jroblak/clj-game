@@ -5,8 +5,6 @@
 ;    - factor out level 1 code to separate functions that are called
 ;      by the level functions ?
 
-(set! *warn-on-reflection* true)
-
 (ns clj-game.core
   (:require [play-clj.core :refer :all]
             [play-clj.g2d :refer :all]
@@ -68,14 +66,14 @@
           sheet (texture "player.png")
           tiles (texture! sheet :split 32 32)
           player-images (for [col [0 1 2 3 4]]
-                          (texture (aget tiles 0 col)))]
+                          (texture (aget tiles 0 col)))
+          enemy-images (for [col [0 1 2 3 4]]
+                          (texture (aget tiles 1 col)))]
       (flatten (pvalues
                 (apply e/create-player player-images)
-                ; OBJECT LAYERS NOT YET IN PLAY-CLJ
-                ;(for [tile-object (tiled-map-layer! (tiled-map-layer screen "entities")
-                ;                             :get-objects)]
-                ;  (apply e/create-baddy (conj player-images tile-object)))
-                ))))
+                (for [object (map-layer! (map-layer screen "entities") :get-objects)]
+                  ;(apply e/create-baddy (conj enemy-images (.getRectangle object))))))))
+                  (apply e/create-baddy enemy-images))))))
   :on-render
   (fn [screen entities]
     (clear! 0.5 0.5 1 1) ; RGBA background color

@@ -44,8 +44,6 @@
      :height 1
      :x-velocity 0
      :y-velocity 0
-     :x 20
-     :y 10
      :can-jump? false
      :can-attack? true
      :direction :right)))
@@ -53,16 +51,18 @@
 (defn create-player
   [stand jump & walk]
   (assoc (create stand jump walk)
-         :me? true))
+         :me? true
+         :health 5
+         :x 20
+         :y 10))
 
 (defn create-baddy
-  ;[stand jump walk object]
-  [stand jump & walk]
+  [object stand jump & walk]
   (assoc (create stand jump walk)
-         :is-enemy? true
-         ;:x (.x object)
-         ;:y (.y object)))
-    ))
+    :enemy? true
+    :health 1
+    :x (/ (map-object! object :x) u/pixels-per-tile)
+    :y (/ (map-object! object :y) u/pixels-per-tile)))
 
 (defn create-attack
   [screen entities entity]

@@ -1,6 +1,5 @@
 ; TODO:
-; 1. bad guy(s)
-;    - iterate through tilemap and search for objects in layers
+; 1. health
 ; 2. transitioning to new level(s)
 ;    - factor out level 1 code to separate functions that are called
 ;      by the level functions ?
@@ -72,8 +71,7 @@
       (flatten (pvalues
                 (apply e/create-player player-images)
                 (for [object (map-layer! (map-layer screen "entities") :get-objects)]
-                  ;(apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
-                  (apply e/create-baddy enemy-images))))))
+                  (apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
   :on-render
   (fn [screen entities]
     (clear! 0.5 0.5 1 1) ; RGBA background color

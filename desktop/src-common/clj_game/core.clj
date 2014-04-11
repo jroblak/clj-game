@@ -8,8 +8,6 @@
   (:require [play-clj.core :refer :all]
             [play-clj.g2d :refer :all]
             [play-clj.ui :refer :all]
-            [clj-game.entities :as e]
-            [clj-game.utils :as u]
             [clj-game.level :as l]))
 
 ; declare forward bindings for our 'screens' / 'levels'
@@ -49,7 +47,7 @@
     (l/on-show "level1" screen entities))
   :on-render
   (fn [screen entities]
-    (l/on-render screen entities))
+    (l/on-render clj-game title-screen screen entities))
   :on-resize
   (fn [{:keys [width height] :as screen} entities]
     (l/on-resize screen entities))
@@ -64,7 +62,7 @@
     (l/on-show "level2" screen entities))
   :on-render
   (fn [screen entities]
-    (l/on-render screen entities))
+    (l/on-render clj-game title-screen screen entities))
   :on-resize
   (fn [{:keys [width height] :as screen} entities]
     (l/on-resize screen entities))

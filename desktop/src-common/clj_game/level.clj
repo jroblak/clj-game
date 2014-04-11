@@ -5,13 +5,10 @@
             [clj-game.entities :as e]
             [clj-game.utils :as u]))
 
-; forward bindings
-(declare clj-game title-screen)
-
 ; custom update code for the game
 ; handles removing and resetting entities
 (defn update-screen!
-  [screen entities]
+  [clj-game title-screen screen entities]
   (doseq [{:keys [x y height me? attack? to-destroy] :as entity} entities]
     (when me?
       (x! screen x)
@@ -39,7 +36,7 @@
                 (apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
 
 (defn on-render
-  [screen entities]
+  [clj-game title-screen screen entities]
   (clear! 0.5 0.5 1 1) ; RGBA background color
   (->> entities
        (e/handle-ai)
@@ -50,7 +47,7 @@
                   (e/animate screen)))
        (e/handle-attacks screen)
        (render! screen)
-       (update-screen! screen)))
+       (update-screen! clj-game title-screen screen)))
 
 (defn on-resize
   [{:keys [width height] :as screen} entities]

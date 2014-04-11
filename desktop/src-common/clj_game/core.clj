@@ -72,7 +72,7 @@
       (flatten (pvalues
                 (apply e/create-player player-images)
                 (for [object (map-layer! (map-layer screen "entities") :get-objects)]
-                  ;(apply e/create-baddy (conj enemy-images (.getRectangle object))))))))
+                  ;(apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
                   (apply e/create-baddy enemy-images))))))
   :on-render
   (fn [screen entities]

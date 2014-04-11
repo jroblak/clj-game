@@ -71,6 +71,9 @@
     :else
     direction))
 
+(defn get-touching-entity
+  [screen {:keys [x y width height]}])
+
 (defn get-touching-tile
   [screen {:keys [x y width height]} & layer-names]
   (let [layers (map #(tiled-map-layer screen %) layer-names)]

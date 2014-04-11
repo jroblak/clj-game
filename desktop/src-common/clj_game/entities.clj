@@ -110,6 +110,7 @@
           []
           entity)))))
 
+; ai code
 (defn handle-ai
   [entities]
   entities)
@@ -139,6 +140,10 @@
            {:direction direction})))
 
 ; collision code
+(defn collide
+  [screen entity]
+  entity)
+
 (defn prevent-move
   [screen {:keys [x y x-change y-change] :as entity}]
   (let [old-x (- x x-change)

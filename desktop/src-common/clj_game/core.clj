@@ -79,6 +79,7 @@
          (e/handle-ai)
          (map #(->> %
                     (e/move screen)
+                    (e/collide screen)
                     (e/prevent-move screen)
                     (e/animate screen)))
          (e/handle-attacks screen)

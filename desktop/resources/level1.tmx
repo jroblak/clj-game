@@ -19,6 +19,6 @@
   </data>
  </layer>
  <objectgroup name="entities">
-  <object x="416" y="233" width="19" height="20"/>
+  <object x="165" y="196" width="19" height="20"/>
  </objectgroup>
 </map>

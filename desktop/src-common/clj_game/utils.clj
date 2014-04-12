@@ -9,14 +9,14 @@
 (def ^:const max-velocity 8)
 (def ^:const jump-velocity 8)
 (def ^:const max-jump-velocity (* jump-velocity 4))
-(def ^:const deceleration 0.9)
+(def ^:const x-deceleration 0.9)
 (def ^:const y-deceleration 0.01)
 (def ^:const gravity -2.0)
 
 ; deceleration for x-velocity
 (defn decelerate
   [velocity]
-  (let [velocity (* velocity deceleration)]
+  (let [velocity (* velocity x-deceleration)]
     (if (< (Math/abs velocity) damping)
       0
       velocity)))
@@ -70,6 +70,9 @@
     (< x-velocity 0) :left
     :else
     direction))
+
+(defn get-touching-entity
+  [screen {:keys [x y width height]}])
 
 (defn get-touching-tile
   [screen {:keys [x y width height]} & layer-names]

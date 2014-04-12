@@ -1,8 +1,6 @@
 ; TODO:
 ; 1. health
 ; 2. transitioning to new level(s)
-;    - factor out level 1 code to separate functions that are called
-;      by the level functions ?
 
 (ns clj-game.core
   (:require [play-clj.core :refer :all]

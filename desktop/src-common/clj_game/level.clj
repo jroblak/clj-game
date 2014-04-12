@@ -24,6 +24,7 @@
   (let [screen (->> (/ 1 u/pixels-per-tile)
                     (orthogonal-tiled-map (clojure.string/join "" [level ".tmx"]))
                     (update! screen :camera (orthographic) :renderer))
+        ; TODO - better way to handle this with changing between level
         sheet (texture "player.png")
         tiles (texture! sheet :split 32 32)
         player-images (for [col [0 1 2 3 4]]
@@ -43,7 +44,6 @@
        (map #(->> %
                   (e/move screen)
                   (e/collide screen)
-                  (e/prevent-move screen)
                   (e/animate screen)))
        (e/handle-attacks screen)
        (render! screen)

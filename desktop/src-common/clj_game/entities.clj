@@ -139,12 +139,8 @@
              (if (= direction :right) stand-right stand-left))
            {:direction direction})))
 
-; collision code
-(defn collide
-  [screen entity]
-  entity)
 
-(defn prevent-move
+(defn collide
   [screen {:keys [x y x-change y-change] :as entity}]
   (let [old-x (- x x-change)
         old-y (- y y-change)

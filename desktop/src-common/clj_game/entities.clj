@@ -107,7 +107,7 @@
       (if (and me? (key-pressed? :control-left) can-attack?)
         (do
           (add-timer! screen :player-attack-cooldown 1)
-          [(create-attack (count entities) screen entities entity)
+          [(create-attack (+ (count entities) 1) screen entities entity)
            (assoc entity :can-attack? false)])
         (if (and attack? (= x-change 0))
           []

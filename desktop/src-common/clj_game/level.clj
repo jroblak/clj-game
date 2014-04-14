@@ -34,7 +34,7 @@
     (flatten (pvalues
               (apply e/create-player player-images)
               (for [object (map-layer! (map-layer screen "entities") :get-objects)]
-                (apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
+                (apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle) (+ (count entities) 1))))))))
 
 (defn on-render
   [clj-game title-screen screen entities]

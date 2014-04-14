@@ -52,21 +52,24 @@
   [stand jump & walk]
   (assoc (create stand jump walk)
          :me? true
+         :id 0
          :health 5
          :x 20
          :y 10))
 
 (defn create-baddy
-  [object stand jump & walk]
+  [id object stand jump & walk]
   (assoc (create stand jump walk)
     :enemy? true
     :health 1
+    :id id
     :x (/ (map-object! object :x) u/pixels-per-tile)
     :y (/ (map-object! object :y) u/pixels-per-tile)))
 
 (defn create-attack
-  [screen entities entity]
+  [id screen entities entity]
     (assoc (create entity)
+      :id id
       :attack? true))
 
 (defn move
@@ -104,7 +107,7 @@
       (if (and me? (key-pressed? :control-left) can-attack?)
         (do
           (add-timer! screen :player-attack-cooldown 1)
-          [(create-attack screen entities entity)
+          [(create-attack (count entities) screen entities entity)
            (assoc entity :can-attack? false)])
         (if (and attack? (= x-change 0))
           []
@@ -150,7 +153,7 @@
     (merge entity
            (when-let [touching-entities (u/get-touching-entities entities entity)]
              (doseq [touching-entity touching-entities]
-               {})) ; do on hit callbacks and return empty map
+               (println "collision occuring!!"))) ; do on hit callbacks and return empty map
            (when-let [tile (u/get-touching-tile screen entity-x "walls")]
              {:x-velocity 0 :x-change 0 :x old-x})
            (when-let [tile (u/get-touching-tile screen entity-y "walls")]

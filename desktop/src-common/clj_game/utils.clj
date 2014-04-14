@@ -62,6 +62,8 @@
       y-velocity)
     y-velocity))
 
+(defn uuid [] (str (java.util.UUID/randomUUID)))
+
 ; flip sprite based on left / right
 (defn get-direction
   [{:keys [x-velocity direction]}]
@@ -75,8 +77,8 @@
   [{:keys [x y id] :as e} e2]
   (and (not= id (:id e2))
        (nil? (:draw-time e2))
-       (< (Math/abs ^double (- x (:x e2))) pixels-per-tile)
-       (< (Math/abs ^double (- y (:y e2))) pixels-per-tile)))
+       (< (Math/abs ^double (- x (:x e2))) 1)
+       (< (Math/abs ^double (- y (:y e2))) 1)))
 
 (defn get-touching-entities
   [entities entity]

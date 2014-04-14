@@ -43,7 +43,7 @@
        (e/handle-ai)
        (map #(->> %
                   (e/move screen)
-                  (e/collide screen)
+                  (e/collide screen entities)
                   (e/animate screen)))
        (e/handle-attacks screen)
        (render! screen)

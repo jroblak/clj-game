@@ -71,17 +71,16 @@
     :else
     direction))
 
-(defn near-entity?
-  [{:keys [x y id] :as e} e2 min-distance]
+(defn touching-entity?
+  [{:keys [x y id] :as e} e2]
   (and (not= id (:id e2))
        (nil? (:draw-time e2))
-       (> (:health e2) 0)
-       (< (Math/abs ^double (- x (:x e2))) min-distance)
-       (< (Math/abs ^double (- y (:y e2))) min-distance)))
+       (< (Math/abs ^double (- x (:x e2))) pixels-per-tile)
+       (< (Math/abs ^double (- y (:y e2))) pixels-per-tile)))
 
-(defn get-touching-entity
-  [entities entity min-distance]
-  (some #(near-entity? entity % min-distance) entities))
+(defn get-touching-entities
+  [entities entity]
+  (filter #(touching-entity? entity %) entities))
 
 (defn get-touching-tile
   [screen {:keys [x y width height]} & layer-names]

@@ -8,5 +8,3 @@
   []
   (LwjglApplication. clj-game "clj-game" 800 600)
   (Keyboard/enableRepeatEvents true))
-
-(-main)

@@ -54,6 +54,7 @@
          :me? true
          :id 0
          :health 5
+         :collision-callback (fn [x] ())
          :x 20
          :y 10))
 
@@ -62,6 +63,7 @@
   (assoc (create stand jump walk)
     :enemy? true
     :health 1
+    :collision-callback (fn [x] ())
     :id id
     :x (/ (map-object! object :x) u/pixels-per-tile)
     :y (/ (map-object! object :y) u/pixels-per-tile)))
@@ -70,6 +72,7 @@
   [id screen entities entity]
     (assoc (create entity)
       :id id
+      :collision-callback (fn [x] ())
       :attack? true))
 
 (defn move
@@ -99,7 +102,6 @@
       :else
         entity)))
 
-; UGLY - fix
 (defn handle-attacks
   [screen entities]
   (flatten
@@ -143,6 +145,12 @@
            {:direction direction})))
 
 
+; perform callbacks here
+(defn handle-collisions
+  [screen entities]
+  (for [{:keys [collided? colliders] :as entity} entities]
+      entity))
+
 (defn collide
   [screen entities {:keys [x y x-change y-change] :as entity}]
   (let [old-x (- x x-change)
@@ -152,8 +160,7 @@
         up? (> y-change 0)]
     (merge entity
            (when-let [touching-entities (u/get-touching-entities entities entity)]
-             (doseq [touching-entity touching-entities]
-               (println "collision occuring!!"))) ; do on hit callbacks and return empty map
+             {:collided? true :colliders touching-entities})
            (when-let [tile (u/get-touching-tile screen entity-x "walls")]
              {:x-velocity 0 :x-change 0 :x old-x})
            (when-let [tile (u/get-touching-tile screen entity-y "walls")]

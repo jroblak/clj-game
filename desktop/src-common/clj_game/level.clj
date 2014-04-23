@@ -46,6 +46,7 @@
                   (e/collide screen entities)
                   (e/animate screen)))
        (e/handle-attacks screen)
+       (e/handle-collisions screen)
        (render! screen)
        (update-screen! clj-game title-screen screen)))
 

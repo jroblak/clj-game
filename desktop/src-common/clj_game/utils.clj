@@ -3,6 +3,7 @@
 
 ; constants
 (def ^:const vertical-tiles 20)
+(def ^:const starting-health 5)
 (def ^:const pixels-per-tile 16)
 (def ^:const duration 0.15)
 (def ^:const damping 1.0)
@@ -82,7 +83,7 @@
 
 (defn get-touching-entities
   [entities entity]
-  (filter #(touching-entity? entity %) entities))
+  (seq (filter #(touching-entity? entity %) entities)))
 
 (defn get-touching-tile
   [screen {:keys [x y width height]} & layer-names]

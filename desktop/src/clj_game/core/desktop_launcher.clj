@@ -10,3 +10,5 @@
   (Keyboard/enableRepeatEvents true))
 
 (-main)
+
+(:health (first (filter #(:me? %) (-> main-screen :entities deref))))

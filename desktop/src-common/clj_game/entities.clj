@@ -48,31 +48,55 @@
      :can-attack? true
      :direction :right)))
 
+(defn create-health
+  [heart-image]
+  (assoc heart-image
+    :x 10
+    :y 10
+    :width 1
+    :height 1))
+
+(defn player-collision
+  [player touching-entities]
+  (let [current-health (:health player)]
+    (merge {}
+           (if (some #(:enemy? %) touching-entities)
+             {:health (- current-health 1)}
+             {}))))
+
+(defn baddy-collision
+  [baddy touching-entities]
+  (let [current-health (:health baddy)]
+    (merge {}
+           (if (some #(:attack? %) touching-entities)
+             {:health (- current-health 1)}
+             {}))))
+
 (defn create-player
   [stand jump & walk]
   (assoc (create stand jump walk)
          :me? true
          :id 0
-         :health 5
-         :collision-callback (fn [x] ())
+         :health u/starting-health
+         :collision-callback player-collision
          :x 20
          :y 10))
 
 (defn create-baddy
-  [id object stand jump & walk]
+  [object stand jump & walk]
   (assoc (create stand jump walk)
     :enemy? true
     :health 1
-    :collision-callback (fn [x] ())
-    :id id
+    :collision-callback baddy-collision
+    :id (u/uuid)
     :x (/ (map-object! object :x) u/pixels-per-tile)
     :y (/ (map-object! object :y) u/pixels-per-tile)))
 
 (defn create-attack
-  [id screen entities entity]
+  [screen entities entity]
     (assoc (create entity)
-      :id id
-      :collision-callback (fn [x] ())
+      :id (u/uuid)
+      :collision-callback (fn [self touching-entities] {:remove? true})
       :attack? true))
 
 (defn move
@@ -109,7 +133,7 @@
       (if (and me? (key-pressed? :control-left) can-attack?)
         (do
           (add-timer! screen :player-attack-cooldown 1)
-          [(create-attack (+ (count entities) 1) screen entities entity)
+          [(create-attack screen entities entity)
            (assoc entity :can-attack? false)])
         (if (and attack? (= x-change 0))
           []
@@ -119,6 +143,15 @@
 (defn handle-ai
   [entities]
   entities)
+
+; remove any entities with <= 0 health
+(defn handle-damage
+  [screen entities]
+  (remove #(cond
+          (:remove? %) true
+          (nil? (:health %)) false
+          (> (:health %) 0) false
+          :default true) entities))
 
 ; animation code
 (defn animate
@@ -130,29 +163,19 @@
   (let [direction (u/get-direction entity)]
     (merge entity
            (cond
-             (= attack? true)
-             (if (= direction :right)
-               (animation->texture screen walk-right)
-               (animation->texture screen walk-left))
-             (not= y-velocity 0)
-             (if (= direction :right) jump-right jump-left)
-             (not= x-velocity 0)
-             (if (= direction :right)
-               (animation->texture screen walk-right)
-               (animation->texture screen walk-left))
-             :else
-             (if (= direction :right) stand-right stand-left))
+            (not= y-velocity 0)
+              (if (= direction :right) jump-right jump-left)
+            (not= x-velocity 0)
+              (if (= direction :right)
+                (animation->texture screen walk-right)
+                (animation->texture screen walk-left))
+            :else
+              (if (= direction :right) stand-right stand-left))
            {:direction direction})))
 
 
-; perform callbacks here
-(defn handle-collisions
-  [screen entities]
-  (for [{:keys [collided? colliders] :as entity} entities]
-      entity))
-
 (defn collide
-  [screen entities {:keys [x y x-change y-change] :as entity}]
+  [screen entities {:keys [x y x-change y-change collision-callback] :as entity}]
   (let [old-x (- x x-change)
         old-y (- y y-change)
         entity-x (assoc entity :y old-y)
@@ -160,7 +183,7 @@
         up? (> y-change 0)]
     (merge entity
            (when-let [touching-entities (u/get-touching-entities entities entity)]
-             {:collided? true :colliders touching-entities})
+             (collision-callback entity touching-entities))
            (when-let [tile (u/get-touching-tile screen entity-x "walls")]
              {:x-velocity 0 :x-change 0 :x old-x})
            (when-let [tile (u/get-touching-tile screen entity-y "walls")]

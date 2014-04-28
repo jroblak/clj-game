@@ -45,6 +45,7 @@
      :x-velocity 0
      :y-velocity 0
      :can-jump? false
+     :can-damage? true
      :can-attack? true
      :direction :right)))
 
@@ -57,15 +58,16 @@
     :height 1))
 
 (defn player-collision
-  [player touching-entities]
+  [player screen touching-entities]
   (let [current-health (:health player)]
-    (merge {}
-           (if (some #(:enemy? %) touching-entities)
-             {:health (- current-health 1)}
-             {}))))
+    (if (and (some #(:enemy? %) touching-entities) (:can-damage? player))
+      (do
+        (add-timer! screen :player-damage-cooldown 3)
+        {:health (- current-health 1) :can-damage? false :x (- (:x player) 0.5) :y (- (:y player) 0.5)})
+      {})))
 
 (defn baddy-collision
-  [baddy touching-entities]
+  [baddy screen touching-entities]
   (let [current-health (:health baddy)]
     (merge {}
            (if (some #(:attack? %) touching-entities)
@@ -96,7 +98,7 @@
   [screen entities entity]
     (assoc (create entity)
       :id (u/uuid)
-      :collision-callback (fn [self touching-entities] {:remove? true})
+      :collision-callback (fn [self screen touching-entities] {:remove? true})
       :attack? true))
 
 (defn move
@@ -183,7 +185,7 @@
         up? (> y-change 0)]
     (merge entity
            (when-let [touching-entities (u/get-touching-entities entities entity)]
-             (collision-callback entity touching-entities))
+             (collision-callback entity screen touching-entities))
            (when-let [tile (u/get-touching-tile screen entity-x "walls")]
              {:x-velocity 0 :x-change 0 :x old-x})
            (when-let [tile (u/get-touching-tile screen entity-y "walls")]

@@ -1,6 +1,6 @@
 ; TODO:
-; 1. health
-; 2. transitioning to new level(s)
+; 1. transitioning to new level(s)
+; 2. GUI layer
 
 (ns clj-game.core
   (:require [play-clj.core :refer :all]

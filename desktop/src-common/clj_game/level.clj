@@ -6,7 +6,6 @@
             [clj-game.utils :as u]))
 
 ; custom update code for the game
-; handles removing and resetting entities
 (defn update-screen!
   [clj-game title-screen screen entities]
   (doseq [{:keys [x y height me? attack? to-destroy] :as entity} entities]
@@ -66,5 +65,9 @@
     :player-attack-cooldown (for [entity entities]
                               (if (get entity :me?)
                                 (assoc entity :can-attack? true)
+                                entity))
+    :player-damage-cooldown (for [entity entities]
+                              (if (get entity :me?)
+                                (assoc entity :can-damage? true)
                                 entity))
     nil))

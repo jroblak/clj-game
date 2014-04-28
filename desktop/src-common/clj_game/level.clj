@@ -23,9 +23,9 @@
   (let [screen (->> (/ 1 u/pixels-per-tile)
                     (orthogonal-tiled-map (clojure.string/join "" [level ".tmx"]))
                     (update! screen :camera (orthographic) :renderer))
-        ; TODO - better way to handle this with changing between level
+        ; TODO - better way to handle this with changing between level?
         sheet (texture "player.png")
-        health (texture "heart.png")
+        ; health (texture "heart.png")
         tiles (texture! sheet :split 32 32)
         player-images (for [col [0 1 2 3 4]]
                         (texture (aget tiles 0 col)))
@@ -33,7 +33,7 @@
                        (texture (aget tiles 1 col)))]
     (flatten (pvalues
               (apply e/create-player player-images)
-              ;(e/create-health health) -- look into why this isn't working
+              ;(e/create-health health) -- GUI - look into why this isn't working
               (for [object (map-layer! (map-layer screen "entities") :get-objects)]
                 (apply e/create-baddy (conj enemy-images (map-object! object :get-rectangle))))))))
 

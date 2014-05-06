@@ -11,6 +11,9 @@
 ; declare forward bindings for our 'screens' / 'levels'
 (declare clj-game main-screen text-screen title-screen)
 
+(defonce manager (asset-manager))
+(set-asset-manager! manager)
+
 ; TITLE SCREEN
 (defscreen title-screen
   :on-show
